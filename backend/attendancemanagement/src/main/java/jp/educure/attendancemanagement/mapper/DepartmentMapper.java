@@ -7,7 +7,7 @@ import java.util.List;
 public interface DepartmentMapper {
     List<Department> findAll();
     Department findById(Integer id);
-    void insert(Department department);
+    void insert(String name);
     void update(Department department);
     void delete(Integer id);
 }

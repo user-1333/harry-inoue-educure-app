@@ -7,7 +7,7 @@ import java.util.List;
 public interface ApprovalStatusMapper {
     List<ApprovalStatus> findAll();
     ApprovalStatus findById(Integer id);
-    void insert(ApprovalStatus approvalStatus);
+    void insert(String status);
     void update(ApprovalStatus approvalStatus);
     void delete(Integer id);
 }

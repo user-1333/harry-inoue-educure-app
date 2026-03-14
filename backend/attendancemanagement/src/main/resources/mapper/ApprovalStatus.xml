@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.educure.attendancemanagement.mapper.ApprovalStatusMapper">
+    <select id="findAll" resultType="ApprovalStatus">
+        SELECT * FROM approval_status
+    </select>
+    <select id="findById" parameterType="int" resultType="ApprovalStatus">
+        SELECT *
+        FROM approval_status
+        WHERE id = #{id}
+    </select>
+    <insert id="insert" parameterType="string">
+        INSERT INTO approval_status (status)
+        VALUES (#{status})
+    </insert>
+</mapper>

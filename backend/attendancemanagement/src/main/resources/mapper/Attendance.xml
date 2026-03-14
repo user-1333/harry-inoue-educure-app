@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.educure.attendancemanagement.mapper.AttendanceMapper">
+
+    <select id="findAll" resultType="Attendance">
+        SELECT * FROM attendance
+    </select>
+    
+    <select id="findById" parameterType="int" resultType="Attendance">
+        SELECT *
+        FROM attendance
+        WHERE id = #{id}
+    </select>
+
+    <select id="findUserById" parameterType="int" resultType="Attendance">
+        SELECT *
+        FROM attendance
+        WHERE user_id = #{id}
+    </select>
+
+    <insert id="insert" parameterType="Attendance">
+        INSERT INTO attendance (user_id, date, status_id)
+        VALUES (#{userId}, #{date}, #{statusId})
+    </insert>
+
+    <update id="update" parameterType="Attendance">
+        UPDATE attendance
+        SET user_id = #{userId},
+            date = #{date},
+            status_id = #{statusId}
+        WHERE id = #{id}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM attendance
+        WHERE id = #{id}
+    </delete>
+</mapper>

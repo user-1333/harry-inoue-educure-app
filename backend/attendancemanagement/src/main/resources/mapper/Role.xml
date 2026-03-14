@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.educure.attendancemanagement.mapper.RoleMapper">
+    <select id="findAll" resultType="Role">
+        SELECT *
+        FROM roles
+    </select>
+    <select id="findById" parameterType="int" resultType="Role">
+        SELECT *
+        FROM roles
+        WHERE id = #{id}
+    </select>
+    <select id="findPermissionById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.getPermission">
+        SELECT
+            r.name AS roleName,
+            p.name AS permissionName,
+            p.id AS permissionId
+        FROM roles r
+                 JOIN role_permission rp ON rp.role_id = r.id
+                 JOIN permission p ON p.id = rp.permission_id
+        WHERE r.id = #{id}
+    </select>
+    <insert id="insert" parameterType="Role">
+        INSERT INTO roles
+            (name)
+        VALUES
+            (#{name})
+    </insert>
+    <update id="update" parameterType="Role">
+        UPDATE roles
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete" parameterType="int">
+        DELETE FROM roles
+        WHERE id = #{id}
+    </delete>
+</mapper>

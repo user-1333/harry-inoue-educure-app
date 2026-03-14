@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.educure.attendancemanagement.mapper.PermissionMapper">
+    <select id="findAll" resultType="Permission">
+        SELECT *
+        FROM permission
+    </select>
+    <select id="findById" parameterType="int" resultType="Permission">
+        SELECT *
+        FROM permission
+        WHERE id = #{id}
+    </select>
+    <insert id="insert" parameterType="Permission">
+        INSERT INTO permission
+            (name)
+        VALUES
+            (#{name})
+    </insert>
+    <update id="update" parameterType="Permission">
+        UPDATE permission
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+    <delete id="delete" parameterType="int">
+        DELETE FROM permission
+        WHERE id = #{id}
+    </delete>
+</mapper>

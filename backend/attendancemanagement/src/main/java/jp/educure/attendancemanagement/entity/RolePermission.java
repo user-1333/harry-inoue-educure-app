@@ -1,10 +1,11 @@
 package jp.educure.attendancemanagement.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 public class RolePermission {
     private Integer roleId;
     private Integer permissionId;

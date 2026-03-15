@@ -10,6 +10,21 @@
         FROM leave
         WHERE user_id = #{userId}
     </select>
+    <select id="finddetailUserById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.detailLeave">
+        SELECT  l.id,
+                u.name AS userName,
+                lt.name AS leaveTypeName,
+                aps.status AS approvalStatus,
+                l.start_date AS startDate,
+                l.end_date AS endDate,
+                l.approved_at AS approvedAt,
+                u.name AS approvedBy
+        FROM leave l
+        LEFT JOIN users u ON l.user_id = u.id
+        LEFT JOIN leave_type lt ON l.leavetype_id = lt.id
+        LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
+        WHERE u.id = #{id}
+    </select>
     <insert id="insert" parameterType="Leave">
         INSERT INTO leave
             (user_id, leavetype_id, approval_status_id, start_date, end_date, approved_at, approved_by)

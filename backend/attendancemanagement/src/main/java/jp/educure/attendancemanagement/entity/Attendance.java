@@ -1,13 +1,14 @@
 package jp.educure.attendancemanagement.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 public class Attendance {
     private Integer id;
     private Integer userId;

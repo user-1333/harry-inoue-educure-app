@@ -1,12 +1,13 @@
 package jp.educure.attendancemanagement.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
-@Data
+@AllArgsConstructor
+@Getter
+@Setter
 public class Department {
     private Integer id;
     private String name;

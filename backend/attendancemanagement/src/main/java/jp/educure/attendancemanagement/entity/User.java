@@ -1,19 +1,18 @@
 package jp.educure.attendancemanagement.entity;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
-@Data
+@Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     private Integer id;
     private String name;
     private String email;
     private String password;
-    private Integer roleId;
-    private Integer departmentId;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 }

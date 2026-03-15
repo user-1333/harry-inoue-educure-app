@@ -26,12 +26,22 @@ CREATE TABLE IF NOT EXISTS  users (
                        name VARCHAR(255) NOT NULL,
                        email VARCHAR(255) NOT NULL UNIQUE,
                        password VARCHAR(255) NOT NULL,
-                       role_id INT NOT NULL REFERENCES roles(id),
-                       department_id INT NOT NULL REFERENCES department(id),
                        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
+-- ========================
+-- TABLE: USER_PROFILES
+-- ========================
+CREATE TABLE IF NOT EXISTS user_profiles (
+                      user_id INT PRIMARY KEY REFERENCES users(id) ON DELETE CASCADE,
+                      role_id INT,
+                      department_id INT,
+                      FOREIGN KEY (role_id) REFERENCES roles(id),
+                      FOREIGN KEY (department_id) REFERENCES department(id),
+                      created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+                      updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
 -- ========================
 -- TABLE: PERMISSION
 -- ========================

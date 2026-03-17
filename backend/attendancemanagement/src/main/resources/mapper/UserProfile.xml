@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="jp.educure.attendancemanagement.mapper.UserProfileMapper">
+    <select id="findAll" resultType="UserProfile">
+        SELECT *
+        FROM user_profiles
+    </select>
+
+    <select id="findProfileIdByUserId" parameterType="int" resultType="UserProfile">
+        SELECT *
+        FROM user_profiles
+        WHERE user_id = #{userId}
+    </select>
+    <select id="findDetailUserById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.DetailUserProfile">
+        SELECT
+            up.user_id AS userId,
+            u.name AS userName,
+            u.email AS email,
+            r.name AS roleName,
+            d.name AS departmentName
+        FROM user_profiles up
+                 left join roles r ON r.id = up.role_id
+                 left join users u ON u.id = up.user_id
+                 left join department d ON up.department_id = d.id
+        WHERE u.id = #{userId}
+    </select>
+    <select id="findDetailUserAll" parameterType="int" resultType="jp.educure.attendancemanagement.dto.DetailUserProfile">
+        SELECT
+            up.user_id AS userId,
+            u.name AS userName,
+            u.email AS email,
+            r.name AS roleName,
+            d.name AS departmentName
+        FROM user_profiles up
+                 left join roles r ON r.id = up.role_id
+                 left join users u ON u.id = up.user_id
+                 left join department d ON up.department_id = d.id
+    </select>
+    <insert id="insert" parameterType="UserProfile">
+        INSERT INTO user_profiles
+            (user_id, role_id, department_id)
+        VALUES
+            (#{userId}, #{roleId}, #{departmentId})
+    </insert>
+
+    <update id="update" parameterType="UserProfile">
+        UPDATE user_profiles
+        SET role_id = #{roleId},
+            department_id = #{departmentId}
+        WHERE user_id = #{userId}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        DELETE FROM user_profiles
+        WHERE user_id = #{userId}
+    </delete>
+</mapper>
+

@@ -5,8 +5,7 @@
     <select id="findAll" resultType="User">
         SELECT * FROM users
     </select>
-
-        <select id="findById" parameterType="int" resultType="User">
+    <select id="findById" parameterType="int" resultType="User">
         SELECT *
         FROM users
         WHERE id = #{id}
@@ -16,12 +15,13 @@
         FROM users
         WHERE email = #{email}
     </select>
+
     <insert id="insert">
         INSERT INTO users (name, email, password)
         VALUES (#{name}, #{email}, #{password})
     </insert>
 
-    <update id="update" parameterType="jp.educure.attendancemanagement.entity.User">
+    <update id="update">
         UPDATE users
         SET name = #{name},
             email = #{email},

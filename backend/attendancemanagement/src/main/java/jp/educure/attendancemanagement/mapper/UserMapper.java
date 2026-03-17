@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.mapper;
 
+import jp.educure.attendancemanagement.dto.DetailUserProfile;
 import jp.educure.attendancemanagement.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -10,7 +11,7 @@ public interface UserMapper {
     List<User> findAll();
     User findById(Integer id);
     User findByEmail(String email);
-    void insert(String email, String password, String name);
-    void update(User user);
+    void insert(String name,String email, String password);
+    void update(String name,String email,String password);
     void delete(Integer id);
 }

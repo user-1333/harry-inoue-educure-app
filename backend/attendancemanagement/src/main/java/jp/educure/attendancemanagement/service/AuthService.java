@@ -1,6 +1,5 @@
 package jp.educure.attendancemanagement.service;
 
-import jp.educure.attendancemanagement.dto.authUser;
 import jp.educure.attendancemanagement.entity.User;
 import jp.educure.attendancemanagement.mapper.UserMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -52,7 +51,6 @@ public class AuthService {
     public void signup(SignupRequest request) {
 
         String hashedPassword = passwordEncoder.encode(request.password());
-
-        userMapper.insert(request.name(), request.email(), hashedPassword);
+        userMapper.insert(request.name(), request.email(),hashedPassword);
     }
 }

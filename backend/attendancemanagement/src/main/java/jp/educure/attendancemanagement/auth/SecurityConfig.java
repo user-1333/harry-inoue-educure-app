@@ -1,27 +1,18 @@
 package jp.educure.attendancemanagement.auth;
 
 import jp.educure.attendancemanagement.component.JwtAuthFilter;
-import jp.educure.attendancemanagement.entity.User;
-import jp.educure.attendancemanagement.mapper.UserMapper;
-import jp.educure.attendancemanagement.mapper.UserProfileMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -29,11 +20,10 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
-    private final UserProfileMapper userProfileMapper;
-    private final UserMapper userMapper;
-    public SecurityConfig(JwtAuthFilter jwtAuthFilter, UserProfileMapper userProfileMapper,UserMapper userMapper) {
-        this.userProfileMapper = userProfileMapper;
-        this.userMapper = userMapper;
+
+    // SecurityConfig自体は定義クラスだが、依存するフィルタはDIで受ける。
+    // ここで受けたjwtAuthFilterをfilterChainに組み込むことで、JWT認証を有効化する。
+    public SecurityConfig(JwtAuthFilter jwtAuthFilter) {
         this.jwtAuthFilter = jwtAuthFilter;
     }
 
@@ -41,21 +31,25 @@ public class SecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
-                // APIなのでCSRF不要
+                // このアプリはCookieセッション前提ではなくJWT前提なので、CSRF保護は無効化する。
+                // 逆にフォームログインへ戻す場合は再度有効化検討が必要。
                 .csrf(csrf -> csrf.disable())
 
-                // Sessionを使わない
+                // 認証状態は毎リクエストのJWTで復元するため、サーバー側セッションは作らない。
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
 
-                // 認可設定
+                // 認可境界:
+                // - /auth/** はログイン/サインアップ用なので未認証アクセスを許可
+                // - それ以外はすべて認証必須
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
 
-                // JWT filter
+                // JWTフィルタはUsernamePasswordAuthenticationFilterより前に実行する。
+                // 先にSecurityContextを構築しておくことで、後続の認可判定で認証済みとして扱える。
                 .addFilterBefore(jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class);
 
@@ -64,59 +58,14 @@ public class SecurityConfig {
 
     @Bean
     public PasswordEncoder passwordEncoder() {
+        // パスワード保存時はハッシュ化が必須。BCryptはソルト込みで推奨される方式。
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
-
-        return email -> {
-            System.out.println("=== userDetailsService called for email: " + email + " ===");
-            
-            try {
-                User user = userMapper.findByEmail(email);
-                if (user == null) {
-                    System.err.println("User not found for email: " + email);
-                    throw new UsernameNotFoundException("User not found with email: " + email);
-                }
-
-                System.out.println("User found: ID=" + user.getId() + ", Email=" + user.getEmail());
-
-                var userProfile = userProfileMapper.findDetailUserById(user.getId());
-                if (userProfile == null) {
-                    System.err.println("User profile not found for user ID: " + user.getId());
-                    throw new UsernameNotFoundException("User profile not found for user ID: " + user.getId());
-                }
-
-                String roleFromDb = userProfile.getRoleName();
-                if (roleFromDb == null || roleFromDb.trim().isEmpty()) {
-                    System.err.println("Role is null or empty for user ID: " + user.getId());
-                    throw new UsernameNotFoundException("Role not found for user ID: " + user.getId());
-                }
-
-                String formattedRole = "ROLE_" + roleFromDb.trim();
-                System.out.println("--- UserDetailsService Debug ---");
-                System.out.println("Email: [" + email + "]");
-                System.out.println("User ID: [" + user.getId() + "]");
-                System.out.println("Raw Role from DB: [" + roleFromDb + "]");
-                System.out.println("Formatted Authority: [" + formattedRole + "]");
-
-                List<GrantedAuthority> authorities = new ArrayList<>();
-                authorities.add(new SimpleGrantedAuthority(formattedRole));
-
-                return new org.springframework.security.core.userdetails.User(
-                        user.getEmail(),
-                        user.getPassword(),
-                        authorities
-                );
-            } catch (UsernameNotFoundException e) {
-                System.err.println("UsernameNotFoundException: " + e.getMessage());
-                throw e;
-            } catch (Exception e) {
-                System.err.println("Unexpected exception in userDetailsService for email [" + email + "]: " + e.getClass().getName() + " - " + e.getMessage());
-                e.printStackTrace();
-                throw new UsernameNotFoundException("Authentication failed: " + e.getMessage(), e);
-            }
-        };
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        // Springが組み立てたAuthenticationManagerを公開し、
+        // AuthServiceから authenticate(...) を呼べるようにする。
+        return configuration.getAuthenticationManager();
     }
 }

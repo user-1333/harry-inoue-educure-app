@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-//@PreAuthorize("hasRole('Employee')")
+@PreAuthorize("hasRole('Employee')")
 @RestController
 @RequestMapping("/users")
 public class UsersController {

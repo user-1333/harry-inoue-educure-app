@@ -2,6 +2,7 @@ package jp.educure.attendancemanagement.entity;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
@@ -12,7 +13,7 @@ import java.util.Date;
 public class Attendance {
     private Integer id;
     private Integer userId;
-    private Date workDate;
+    private LocalDate workDate;
     private LocalDateTime clockIn;
     private LocalDateTime clockOut;
     private Integer modifiedBy;

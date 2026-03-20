@@ -17,17 +17,24 @@
         FROM attendance
         WHERE user_id = #{id}
     </select>
-
-    <insert id="insert" parameterType="Attendance">
-        INSERT INTO attendance (user_id, date, status_id)
-        VALUES (#{userId}, #{date}, #{statusId})
+    <select id="findByWordDate" resultType="Attendance">
+        SELECT *
+        FROM attendance
+        WHERE work_date = #{workDate} AND user_id = #{userId}
+    </select>
+    <insert id="insert">
+        INSERT INTO attendance (user_id, work_date, clock_in, clock_out, modified_by, modified_at)
+        VALUES (#{userId}, #{workDate}, #{clockIn}, #{clockOut}, #{modifiedBy}, #{modifiedAt})
     </insert>
 
-    <update id="update" parameterType="Attendance">
+    <update id="update">
         UPDATE attendance
         SET user_id = #{userId},
-            date = #{date},
-            status_id = #{statusId}
+            work_date = #{workDate},
+            clock_in = #{clockIn},
+            clock_out = #{clockOut},
+            modified_by = #{modifiedBy},
+            modified_at = #{modifiedAt}
         WHERE id = #{id}
     </update>
 

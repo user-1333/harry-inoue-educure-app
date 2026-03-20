@@ -1,4 +1,4 @@
-package jp.educure.attendancemanagement.component;
+package jp.educure.attendancemanagement.auth;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;

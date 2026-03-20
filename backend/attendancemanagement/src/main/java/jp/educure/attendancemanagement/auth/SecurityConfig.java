@@ -1,6 +1,5 @@
 package jp.educure.attendancemanagement.auth;
 
-import jp.educure.attendancemanagement.component.JwtAuthFilter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;

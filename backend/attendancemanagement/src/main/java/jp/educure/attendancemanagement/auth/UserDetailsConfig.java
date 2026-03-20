@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.auth;
 
+import jp.educure.attendancemanagement.dto.DetailUserProfile;
 import jp.educure.attendancemanagement.entity.User;
 import jp.educure.attendancemanagement.mapper.UserMapper;
 import jp.educure.attendancemanagement.mapper.UserProfileMapper;
@@ -35,11 +36,14 @@ public class UserDetailsConfig {
                 throw new UsernameNotFoundException("User not found");
             }
 
+            DetailUserProfile profile = userProfileMapper.findDetailUserById(user.getId());
+            if (profile == null || profile.getRoleName() == null || profile.getRoleName().isBlank()) {
+                throw new UsernameNotFoundException("User profile not found");
+            }
+
             // DBのロール名をSpring Securityの規約(ROLE_プレフィックス)へ変換。
             // 例: ADMIN -> ROLE_ADMIN
-            String roleFromDb = userProfileMapper
-                    .findDetailUserById(user.getId())
-                    .getRoleName();
+            String roleFromDb = profile.getRoleName();
             String formattedRole = "ROLE_" + roleFromDb.trim();
 
             List<GrantedAuthority> authorities = new ArrayList<>();
@@ -47,9 +51,13 @@ public class UserDetailsConfig {
 
             // 戻り値のUserDetailsに「ハッシュ済みパスワード」と「権限」をセットすることで、
             // AuthenticationManager.authenticate(...) 時にパスワード照合と権限付与が行われる。
-            return new org.springframework.security.core.userdetails.User(
+            return new LoginUser(
+                    user.getId(),
+                    user.getName(),
                     user.getEmail(),
                     user.getPassword(),
+                    profile.getRoleName(),
+                    profile.getDepartmentName(),
                     authorities
             );
         };

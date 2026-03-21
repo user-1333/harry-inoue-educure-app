@@ -2,6 +2,7 @@ package jp.educure.attendancemanagement.entity;
 
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @NoArgsConstructor
@@ -13,10 +14,11 @@ public class Leave {
     private Integer userId;
     private Integer leaveTypeId;
     private Integer approvalStatusId;
-    private String startDate;
-    private String endDate;
+    private LocalDate startDate;
+    private LocalDate endDate;
     private Integer approvedBy;
     private LocalDateTime approvedAt;
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
+    private String reason;
 }

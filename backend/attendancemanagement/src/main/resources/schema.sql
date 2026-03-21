@@ -91,11 +91,14 @@ CREATE TABLE IF NOT EXISTS  leave (
                        approval_status_id INT NOT NULL REFERENCES approval_status(id),
                        start_date DATE NOT NULL,
                        end_date DATE NOT NULL,
+                       reason TEXT,
                        approved_at TIMESTAMP,
                        approved_by INT REFERENCES users(id),
                        created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                        updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE leave ADD COLUMN IF NOT EXISTS reason TEXT;
 
 -- ========================
 -- TABLE: ATTENDANCE

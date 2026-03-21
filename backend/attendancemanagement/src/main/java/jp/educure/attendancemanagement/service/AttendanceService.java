@@ -7,11 +7,13 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class AttendanceService {
     private final AttendanceMapper attendanceMapper;
+
     public ApiResponse clockIn(Integer userId) {
         LocalDateTime now = LocalDateTime.now();
         if (!attendanceMapper.findByWordDate(userId, now.toLocalDate()).isEmpty()){
@@ -29,19 +31,42 @@ public class AttendanceService {
 
     public ApiResponse clockOut(Integer userId) {
         LocalDateTime now = LocalDateTime.now();
-        if (!attendanceMapper.findByWordDate(userId, now.toLocalDate()).isEmpty()){
+        List<Attendance> records = attendanceMapper.findByWordDate(userId, now.toLocalDate());
+        if (records.size() != 1) {
             return new ApiResponse(1, "出勤打刻が存在しないか、複数存在しています。");
         }
-        Attendance todaysWork = attendanceMapper.findByWordDate(userId, now.toLocalDate()).getFirst();
+        Attendance todayWork = records.getFirst();
          attendanceMapper.update(
-                todaysWork.getId(),
                 userId,
-                todaysWork.getWorkDate(),
-                todaysWork.getClockIn(),
+                todayWork.getWorkDate(),
+                todayWork.getClockIn(),
                 now,
                 null,
                 null
         );
         return new ApiResponse(0, "退勤打刻が完了しました。");
+    }
+    public ApiResponse updateAttendance(Integer userId, Attendance attendance) {
+        if (attendance == null || attendance.getUserId() == null || attendance.getWorkDate() == null) {
+            return new ApiResponse(1, "更新対象のユーザーIDと勤務日が必要です。");
+        }
+        if (attendance.getClockIn() != null && attendance.getClockOut() != null
+                && attendance.getClockIn().isAfter(attendance.getClockOut())) {
+            return new ApiResponse(1, "clockIn は clockOut より後にできません。");
+        }
+
+        List<Attendance> records = attendanceMapper.findByWordDate(attendance.getUserId(), attendance.getWorkDate());
+        if (records.size() != 1) {
+            return new ApiResponse(1, "出勤打刻が存在しないか、複数存在しています。");
+        }
+        attendanceMapper.update(
+                attendance.getUserId(),
+                attendance.getWorkDate(),
+                attendance.getClockIn(),
+                attendance.getClockOut(),
+                userId,
+                LocalDateTime.now()
+        );
+        return new ApiResponse(0, "勤怠情報の更新が完了しました。");
     }
 }

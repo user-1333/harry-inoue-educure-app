@@ -26,7 +26,6 @@ public interface AttendanceMapper {
             @Param("modifiedAt")   LocalDateTime modifiedAt
     );
     void update(
-            @Param("id")           Integer id,
             @Param("userId")       Integer userId,
             @Param("workDate")     LocalDate workDate,
             @Param("clockIn")  LocalDateTime clockIn,

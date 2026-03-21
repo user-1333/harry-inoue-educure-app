@@ -25,19 +25,16 @@
         LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
         WHERE u.id = #{id}
     </select>
-    <insert id="insert" parameterType="Leave">
+    <insert id="insert">
         INSERT INTO leave
-            (user_id, leavetype_id, approval_status_id, start_date, end_date, approved_at, approved_by)
+            (user_id, leavetype_id, approval_status_id, start_date, end_date, reason)
         VALUES
-            (#{userId}, #{leaveTypeId}, #{approvalStatusId}, #{startDate}, #{endDate}, #{approvedAt}, #{approvedBy})
+            (#{userId}, #{leaveTypeId}, #{approvalStatusId}, #{startDate}, #{endDate}, #{reason})
     </insert>
-    <update id="update" parameterType="Leave">
+    <update id="update">
         UPDATE leave
-        SET user_id = #{userId},
-            leavetype_id = #{leavetypeId},
+        SET
             approval_status_id = #{approvalStatusId},
-            start_date = #{startDate},
-            end_date = #{endDate},
             approved_at = #{approvedAt},
             approved_by = #{approvedBy}
         WHERE id = #{id}

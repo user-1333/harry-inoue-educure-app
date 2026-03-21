@@ -29,13 +29,12 @@
 
     <update id="update">
         UPDATE attendance
-        SET user_id = #{userId},
-            work_date = #{workDate},
-            clock_in = #{clockIn},
+        SET clock_in = #{clockIn},
             clock_out = #{clockOut},
             modified_by = #{modifiedBy},
             modified_at = #{modifiedAt}
-        WHERE id = #{id}
+        WHERE user_id = #{userId}
+          AND work_date = #{workDate}
     </update>
 
     <delete id="delete" parameterType="int">

@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.auth;
 
+import jp.educure.attendancemanagement.domain.role.RoleType;
 import jp.educure.attendancemanagement.dto.DetailUserProfile;
 import jp.educure.attendancemanagement.entity.User;
 import jp.educure.attendancemanagement.mapper.UserMapper;
@@ -43,12 +44,10 @@ public class UserDetailsConfig {
 
             // DBのロール名をSpring Securityの規約(ROLE_プレフィックス)へ変換。
             // 例: ADMIN -> ROLE_ADMIN
-            String roleFromDb = profile.getRoleName();
-            String formattedRole = "ROLE_" + roleFromDb.trim();
-
-            List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority(formattedRole));
-
+            RoleType roleType = RoleType.valueOf(profile.getRoleName().trim());
+            List<GrantedAuthority> authorities = List.of(
+                    new SimpleGrantedAuthority(roleType.toRoleName())
+            );
             // 戻り値のUserDetailsに「ハッシュ済みパスワード」と「権限」をセットすることで、
             // AuthenticationManager.authenticate(...) 時にパスワード照合と権限付与が行われる。
             return new LoginUser(

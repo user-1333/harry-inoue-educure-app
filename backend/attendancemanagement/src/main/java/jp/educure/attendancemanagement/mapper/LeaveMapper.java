@@ -12,7 +12,10 @@ public interface LeaveMapper {
     List<Leave> findAll();
     List<Leave> findUserById(Integer userId);
     Leave findById(Integer id);
-    detailLeave finddetailUserById(Integer userId);
+    List<detailLeave> finddetailLeaveById(Integer userId);
+    List<detailLeave> finddetailLeaveMonth(Integer month);
+    List<detailLeave> finddetailLeaveApproval(Integer approvalStatusId);
+    List<detailLeave> finddetailLeaveAll();
     void insert(
             @Param("userId") Integer userId,
             @Param("leaveTypeId") Integer leaveTypeId,

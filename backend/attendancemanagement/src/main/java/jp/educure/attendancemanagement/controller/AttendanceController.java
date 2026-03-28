@@ -3,6 +3,7 @@ package jp.educure.attendancemanagement.controller;
 import jp.educure.attendancemanagement.auth.LoginUser;
 import jp.educure.attendancemanagement.dto.ApiResponse;
 import jp.educure.attendancemanagement.dto.AttendanceUpdateRequest;
+import jp.educure.attendancemanagement.dto.DetailAttendance;
 import jp.educure.attendancemanagement.entity.Attendance;
 import jp.educure.attendancemanagement.service.AttendanceService;
 import lombok.RequiredArgsConstructor;
@@ -10,11 +11,23 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/attendance")
 public class AttendanceController {
     private final AttendanceService attendanceService;
+
+    @GetMapping("/get/all")
+    public List<DetailAttendance> getAll() {
+        return attendanceService.getAttendanceAll();
+    }
+
+    @GetMapping("get/user")
+    public List<DetailAttendance> getAttendanceByUserId(@AuthenticationPrincipal LoginUser loginUser) {
+        return attendanceService.getAttendanceByUserId(loginUser.getUserId());
+    }
 
     @PostMapping("/clock-in")
     public ApiResponse clockIn(@AuthenticationPrincipal LoginUser loginUser) {

@@ -12,7 +12,8 @@ import java.util.List;
 @NoArgsConstructor
 public class DetailUserProfile {
     private Integer userId;
-    private String email;
-    private String roleName;
-    private String departmentName;
+    private String  userName;
+    private String  email;
+    private String  roleName;
+    private String  departmentName;
 }

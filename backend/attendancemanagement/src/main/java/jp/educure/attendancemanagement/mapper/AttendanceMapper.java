@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.mapper;
 
+import jp.educure.attendancemanagement.dto.DetailAttendance;
 import jp.educure.attendancemanagement.entity.Attendance;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -10,10 +11,10 @@ import java.util.List;
 
 @Mapper
 public interface AttendanceMapper {
-    List<Attendance> findAll();
+    List<DetailAttendance> findAll();
     Attendance findById(Integer id);
-    List<Attendance> findUserById(Integer userId);
-    List<Attendance> findByWordDate(
+    List<DetailAttendance> findUserById(Integer userId);
+    List<Attendance> findByWorkDate(
             @Param("userId")   Integer userId,
             @Param("workDate") LocalDate workDate
     );

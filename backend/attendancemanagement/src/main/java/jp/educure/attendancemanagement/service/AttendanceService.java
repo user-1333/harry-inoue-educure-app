@@ -1,6 +1,7 @@
 package jp.educure.attendancemanagement.service;
 
 import jp.educure.attendancemanagement.dto.ApiResponse;
+import jp.educure.attendancemanagement.dto.DetailAttendance;
 import jp.educure.attendancemanagement.entity.Attendance;
 import jp.educure.attendancemanagement.mapper.AttendanceMapper;
 import lombok.RequiredArgsConstructor;
@@ -13,10 +14,15 @@ import java.util.List;
 @RequiredArgsConstructor
 public class AttendanceService {
     private final AttendanceMapper attendanceMapper;
-
+    public List<DetailAttendance> getAttendanceByUserId(Integer userId) {
+        return attendanceMapper.findUserById(userId);
+    }
+    public List<DetailAttendance> getAttendanceAll() {
+        return attendanceMapper.findAll();
+    }
     public ApiResponse clockIn(Integer userId) {
         LocalDateTime now = LocalDateTime.now();
-        if (!attendanceMapper.findByWordDate(userId, now.toLocalDate()).isEmpty()){
+        if (!attendanceMapper.findByWorkDate(userId, now.toLocalDate()).isEmpty()){
             return new ApiResponse(1, "既に出勤打刻が存在しています。");
         }
         attendanceMapper.insert(
@@ -31,7 +37,7 @@ public class AttendanceService {
 
     public ApiResponse clockOut(Integer userId) {
         LocalDateTime now = LocalDateTime.now();
-        List<Attendance> records = attendanceMapper.findByWordDate(userId, now.toLocalDate());
+        List<Attendance> records = attendanceMapper.findByWorkDate(userId, now.toLocalDate());
         if (records.size() != 1) {
             return new ApiResponse(1, "出勤打刻が存在しないか、複数存在しています。");
         }
@@ -55,7 +61,7 @@ public class AttendanceService {
             return new ApiResponse(1, "clockIn は clockOut より後にできません。");
         }
 
-        List<Attendance> records = attendanceMapper.findByWordDate(attendance.getUserId(), attendance.getWorkDate());
+        List<Attendance> records = attendanceMapper.findByWorkDate(attendance.getUserId(), attendance.getWorkDate());
         if (records.size() != 1) {
             return new ApiResponse(1, "出勤打刻が存在しないか、複数存在しています。");
         }

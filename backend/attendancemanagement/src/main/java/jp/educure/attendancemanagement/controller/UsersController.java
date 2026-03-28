@@ -27,8 +27,8 @@ public class UsersController {
     public DetailUserProfile getUserById(@PathVariable Integer id) {
         return userProfileMapper.findDetailUserById(id);
     }
-    @GetMapping("/test")
-    public String test(@AuthenticationPrincipal LoginUser loginUser) {
-        return loginUser.getUsername();
+    @GetMapping("/me")
+    public DetailUserProfile test(@AuthenticationPrincipal LoginUser loginUser) {
+        return userProfileMapper.findDetailUserById(loginUser.getUserId());
     }
 }

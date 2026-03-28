@@ -114,3 +114,12 @@ CREATE TABLE IF NOT EXISTS  attendance (
                             created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
                             updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
+
+ALTER TABLE attendance
+    ADD COLUMN is_late BOOLEAN DEFAULT FALSE,
+    ADD COLUMN is_early_leave BOOLEAN DEFAULT FALSE,
+    ADD COLUMN remarks TEXT;
+
+ALTER TABLE attendance
+    ADD COLUMN break_start TIMESTAMP,
+    ADD COLUMN break_end TIMESTAMP;

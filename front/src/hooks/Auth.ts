@@ -1,6 +1,7 @@
 import type { APIres } from "@/components/schema/APIresponse";
 import { request } from "@/lib/ApiFetch";
 import { setTokenToCookie } from "@/lib/cookie";
+import { toast } from "sonner"
 
 export function login(postData:{email:string,password:string}) {
     request<{ token: string }>("auth/login", {
@@ -11,7 +12,9 @@ export function login(postData:{email:string,password:string}) {
         window.location.href = "/";
     }).catch((err) => {
         console.error(err);
-        alert(err.message || "Login failed");
+        toast.error(err.message || "Login failed", {
+            position: "top-center",
+        });
         document.getElementById('btn')?.removeAttribute('disabled');
     });
 }
@@ -25,7 +28,9 @@ export function signup(postData:{name:string,email:string,password:string}) {
         window.location.href = "/";
     }).catch((err) => {
         console.error(err);
-        alert(err.message || "Signup failed");
+        toast.error(err.message || "Signup failed", {
+            position: "top-center",
+        });
         document.getElementById('btn')?.removeAttribute('disabled');
     });
 }
@@ -35,10 +40,15 @@ export function ChangeRole(postData:{userId:number,roleId:number}) {
         method: "PUT",
         data: postData
     }).then((res) => {
+        toast.success(res.message, {
+            position: "top-center",
+        });
         console.log(`User ID: ${postData.userId}, New Role: ${postData.roleId}`);
     }).catch((err) => {
         console.error(err);
-        alert(err.message || "Failed to update role");
+        toast.error(err.message || "Failed to update role", {
+            position: "top-center",
+        });
     });
 
 }

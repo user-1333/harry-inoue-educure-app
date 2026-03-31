@@ -8,6 +8,7 @@ import { Button } from './ui/button';
 import { useState, type ComponentProps, type Dispatch } from 'react';
 import { modifyAttendanceAPI } from '@/hooks/Attendance';
 import { format } from 'date-fns';
+import { toast } from 'sonner';
 
 type FieldKey = 'start' | 'end' | 'breakIn' | 'breakOut'
 
@@ -50,7 +51,9 @@ export default function FormModification({ attendance, onClose }: { attendance: 
       await modifyAttendanceAPI(newAttendance, attendance.id);
       onClose?.();
     } catch {
-      window.alert("勤怠の更新に失敗しました。");
+      toast.error("勤怠の更新に失敗しました。", {
+        position: "top-center",
+      });
     }
   }
 

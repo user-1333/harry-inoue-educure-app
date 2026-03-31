@@ -1,5 +1,3 @@
-import { id } from "date-fns/locale";
-
 export const RoleMap = {
     EMPLOYEE : 1,
     MANAGER  : 2,

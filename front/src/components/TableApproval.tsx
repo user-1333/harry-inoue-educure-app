@@ -17,7 +17,6 @@ import { getLeaveAllAPI, leaveApprovalAPI } from "@/hooks/Leave"
 import { useEffect, useState } from "react"
 import type { Leave } from "./schema/Leave"
 import { LeaveTypeMap,ApprovalStatusMap } from "@/lib/type"
-import App from "@/App"
 
 export default function ApprovalTable() {
     const [reload, setReload] = useState(false)

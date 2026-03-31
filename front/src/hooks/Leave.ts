@@ -1,16 +1,21 @@
 import type { APIres } from "@/components/schema/APIresponse";
 import type { Leave, LeaveRequest, LeaveApproval } from "@/components/schema/Leave";
 import { request } from "@/lib/ApiFetch";
+import { toast } from "sonner";
 
 export function leaveRequestAPI(leave:LeaveRequest){
     request<APIres>("leave/request",{
             method:"POST",
             data:leave})
         .then((res) => {
-            window.alert(res.message);
+            toast.success(res.message, {
+                position: "top-center",
+            });
         }).catch((err) => {
             console.error(err);
-            return (`error:${err}`)
+            toast.error(err.message || "Failed to request leave", {
+                position: "top-center",
+            });
         });
 
 }
@@ -20,7 +25,9 @@ export function leaveApprovalAPI(leaveApproval:LeaveApproval){
         data:leaveApproval,
         credentials: "include"
     }).then((res) => {
-        window.alert(res.message);
+        toast.success(res.message, {
+            position: "top-center",
+        });
     }).catch((err) => {
         console.error(err);
         return (`error:${err}`)

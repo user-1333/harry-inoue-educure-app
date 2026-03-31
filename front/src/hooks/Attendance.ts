@@ -1,6 +1,7 @@
 import type { APIres } from "@/components/schema/APIresponse";
 import type { attendance, attendanceMin, attendanceModification } from "@/components/schema/Attendance";
 import { request } from "@/lib/ApiFetch";
+import { toast } from "sonner";
 
 export async function getAttendanceAll():Promise<Array<attendance>>{
     return await request<Array<attendance>>("attendance/get/all",{method:"GET"})
@@ -66,7 +67,9 @@ export async function modifyAttendanceAPI(attendance: attendanceModification, at
             data: attendance,
             credentials: "include"
         });
-        window.alert(res.message);
+        toast.success(res.message, {
+            position: "top-center",
+        });
         return res;
     } catch (err) {
         console.error(err);

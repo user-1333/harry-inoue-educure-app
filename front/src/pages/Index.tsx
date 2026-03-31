@@ -1,6 +1,7 @@
 import Sidebar from "@/pages/home/Sidebar";
 import { useAuthUser } from "@/hooks/useAuthUser";
 import { Outlet } from "react-router-dom";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Index() {
   const user = useAuthUser();
@@ -11,6 +12,7 @@ export default function Index() {
       <main className="w-full">
         <Outlet />
       </main>
+      <Toaster />
     </div>
   );
 }

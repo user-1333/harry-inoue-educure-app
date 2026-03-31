@@ -20,13 +20,6 @@ public class LeaveService {
     public List<detailLeave> getLeave(Integer userId) {
         return leaveMapper.finddetailLeaveById(userId);
     }
-    public List<detailLeave> getLeaveMonth(Integer month) {
-        return leaveMapper.finddetailLeaveMonth(month);
-    }
-
-    public List<detailLeave> getLeaveAll() {
-        return leaveMapper.finddetailLeaveAll();
-    }
 
     public List<detailLeave> getLeaveApproval(Integer approvalStatusId) {
         return leaveMapper.finddetailLeaveApproval(approvalStatusId);

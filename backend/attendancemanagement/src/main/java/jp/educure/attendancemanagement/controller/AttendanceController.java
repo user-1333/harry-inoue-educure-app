@@ -29,10 +29,6 @@ public class AttendanceController {
         return attendanceService.getAttendanceByUserId(loginUser.getUserId());
     }
 
-    @PostMapping("get/id/{attendanceId}")
-    public List<DetailAttendance> getAttendanceById(@PathVariable Integer attendanceId) {
-        return attendanceService.getAttendanceById(attendanceId);
-    }
 
     @GetMapping("get/user/work-date")
     public List<Attendance> getAttendanceByWorkDate(@AuthenticationPrincipal LoginUser loginUser) {

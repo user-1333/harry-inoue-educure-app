@@ -1,15 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="jp.educure.attendancemanagement.mapper.LeaveMapper">
-    <select id="findAll" resultType="Leave">
-        SELECT *
-        FROM leave
-    </select>
-    <select id="findUserById" parameterType="int" resultType="Leave">
-        SELECT *
-        FROM leave
-        WHERE user_id = #{userId}
-    </select>
     <select id="finddetailLeaveById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.detailLeave">
         SELECT  l.id,
                 u.name AS userName,
@@ -27,22 +18,6 @@
         LEFT JOIN users au ON l.approved_by = au.id
         WHERE u.id = #{id}
     </select>
-    <select id="finddetailLeaveMonth" parameterType="int" resultType="jp.educure.attendancemanagement.dto.detailLeave">
-        SELECT  l.id,
-                u.name AS userName,
-                lt.name AS leaveTypeName,
-                aps.status AS approvalStatus,
-                l.start_date AS startDate,
-                l.end_date AS endDate,
-                l.approved_at AS approvedAt,
-                au.name AS approvedBy
-        FROM leave l
-                 LEFT JOIN users u ON l.user_id = u.id
-                 LEFT JOIN leave_type lt ON l.leavetype_id = lt.id
-                 LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
-                 LEFT JOIN users au ON l.approved_by = au.id
-        WHERE l.created_at >= now() - make_interval(months => #{month});
-    </select>
     <select id="finddetailLeaveApproval" parameterType="int" resultType="jp.educure.attendancemanagement.dto.detailLeave">
         SELECT  l.id,
                 u.name AS userName,
@@ -59,21 +34,6 @@
                  LEFT JOIN users au ON l.approved_by = au.id
         WHERE l.approval_status_id = #{approvalStatusId};
     </select>
-    <select id="finddetailLeaveAll" resultType="jp.educure.attendancemanagement.dto.detailLeave">
-        SELECT  l.id,
-                u.name AS userName,
-                lt.name AS leaveTypeName,
-                aps.status AS approvalStatus,
-                l.start_date AS startDate,
-                l.end_date AS endDate,
-                l.approved_at AS approvedAt,
-                au.name AS approvedBy
-        FROM leave l
-                 LEFT JOIN users u ON l.user_id = u.id
-                 LEFT JOIN leave_type lt ON l.leavetype_id = lt.id
-                 LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
-                 LEFT JOIN users au ON l.approved_by = au.id;
-    </select>
     <insert id="insert">
         INSERT INTO leave
             (user_id, leavetype_id, approval_status_id, start_date, end_date, reason)
@@ -88,8 +48,4 @@
             approved_by = #{approvedBy}
         WHERE id = #{id}
     </update>
-    <delete id="delete" parameterType="int">
-        DELETE FROM leave
-        WHERE id = #{id}
-    </delete>
 </mapper>

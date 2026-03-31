@@ -40,25 +40,6 @@
         LEFT JOIN users mu ON a.modified_by = mu.id
         WHERE user_id = #{id};
     </select>
-    <select id="findAttendanceById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.DetailAttendance">
-        SELECT
-            a.id AS id,
-            u.name AS userName,
-            a.work_date AS workDate,
-            a.clock_in AS clockIn,
-            a.clock_out AS clockOut,
-            a.is_late AS isLate,
-            a.is_early_leave AS isEarlyLeave,
-            EXTRACT(EPOCH FROM (a.break_end - a.break_start)) / 60 AS breakTimeMinutes,
-            a.break_start AS breakStart,
-            a.break_end AS breakEnd,
-            mu.name AS modifiedBy,
-            a.modified_at AS modifiedAt
-        FROM attendance a
-                 LEFT JOIN users u ON a.user_id = u.id
-                 LEFT JOIN users mu ON a.modified_by = mu.id
-        WHERE id = #{id}
-    </select>
     <select id="findByWorkDate" resultType="Attendance">
         SELECT *
         FROM attendance
@@ -95,8 +76,4 @@
         WHERE user_id = #{userId} AND work_date = #{workDate}
     </update>
 
-    <delete id="delete" parameterType="int">
-        DELETE FROM attendance
-        WHERE id = #{id}
-    </delete>
 </mapper>

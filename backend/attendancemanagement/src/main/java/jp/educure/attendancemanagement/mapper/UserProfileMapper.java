@@ -9,8 +9,6 @@ import java.util.List;
 
 @Mapper
 public interface UserProfileMapper {
-    List<UserProfile> findAll();
-    UserProfile findProfileIdByUserId(Integer userId);
     DetailUserProfile findDetailUserById(Integer id);
     List<DetailUserProfile> findDetailUserAll();
     void insert(Integer userId, Integer roleId, Integer departmentId);
@@ -19,5 +17,4 @@ public interface UserProfileMapper {
             @Param("roleId") Integer roleId,
             @Param("departmentId") Integer departmentId
     );
-    void delete(Integer userId);
 }

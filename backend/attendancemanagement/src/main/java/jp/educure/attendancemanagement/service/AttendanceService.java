@@ -20,9 +20,6 @@ public class AttendanceService {
     public List<DetailAttendance> getAttendanceByUserId(Integer userId) {
         return attendanceMapper.findUserById(userId);
     }
-    public List<DetailAttendance> getAttendanceById(Integer id) {
-        return attendanceMapper.findAttendanceById(id);
-    }
     public List<Attendance> getAttendanceByWorkDate(Integer userId) {
         return attendanceMapper.findByWorkDate(userId, LocalDateTime.now().toLocalDate());
     }
@@ -117,10 +114,6 @@ public class AttendanceService {
             return new ApiResponse(1, "breakStart は breakEnd より後にできません。");
         }
         Integer userId = attendanceMapper.findById(attendance.getId()).getUserId();
-        System.out.println("attendance 詳細: " + attendance.getId() + ", " + userId + ", " + attendance.getWorkDate() + ", " +
-                attendance.getClockIn() + ", " + attendance.getClockOut() + ", " +
-                attendance.getIsLate() + ", " + attendance.getIsEarlyLeave() + ", " +
-                attendance.getBreakStart() + ", " + attendance.getBreakEnd());
         attendanceMapper.update(
                 attendance.getId(),
                 userId,

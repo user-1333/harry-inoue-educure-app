@@ -14,7 +14,6 @@ public interface AttendanceMapper {
     List<DetailAttendance> findAll();
     List<DetailAttendance> findUserById(Integer userId);
     Attendance findById(Integer id);
-    List<DetailAttendance> findAttendanceById(Integer id);
     List<Attendance> findByWorkDate(
             @Param("userId")   Integer userId,
             @Param("workDate") LocalDate workDate
@@ -47,5 +46,4 @@ public interface AttendanceMapper {
             @Param("breakStart") LocalDateTime breakStart,
             @Param("breakEnd")   LocalDateTime breakEnd
     );
-    void delete(Integer id);
 }

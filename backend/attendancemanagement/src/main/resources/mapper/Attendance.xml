@@ -9,51 +9,90 @@
             a.work_date AS workDate,
             a.clock_in AS clockIn,
             a.clock_out AS clockOut,
+            a.is_late AS isLate,
+            a.is_early_leave AS isEarlyLeave,
+            EXTRACT(EPOCH FROM (a.break_end - a.break_start)) / 60 AS breakTimeMinutes,
+            a.break_start AS breakStart,
+            a.break_end AS breakEnd,
             mu.name AS modifiedBy,
             a.modified_at AS modifiedAt
         FROM attendance a
-                 LEFT JOIN users u ON a.user_id = u.id
-                 LEFT JOIN users mu ON a.modified_by = mu.id
+        LEFT JOIN users u ON a.user_id = u.id
+        LEFT JOIN users mu ON a.modified_by = mu.id
     </select>
-    
-    <select id="findById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.DetailAttendance">
+
+    <select id="findUserById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.DetailAttendance">
         SELECT
             a.id AS id,
             u.name AS userName,
             a.work_date AS workDate,
             a.clock_in AS clockIn,
             a.clock_out AS clockOut,
+            a.is_late AS isLate,
+            a.is_early_leave AS isEarlyLeave,
+            EXTRACT(EPOCH FROM (a.break_end - a.break_start)) / 60 AS breakTimeMinutes,
+            a.break_start AS breakStart,
+            a.break_end AS breakEnd,
+            mu.name AS modifiedBy,
+            a.modified_at AS modifiedAt
+        FROM attendance a
+        LEFT JOIN users u ON a.user_id = u.id
+        LEFT JOIN users mu ON a.modified_by = mu.id
+        WHERE user_id = #{id};
+    </select>
+    <select id="findAttendanceById" parameterType="int" resultType="jp.educure.attendancemanagement.dto.DetailAttendance">
+        SELECT
+            a.id AS id,
+            u.name AS userName,
+            a.work_date AS workDate,
+            a.clock_in AS clockIn,
+            a.clock_out AS clockOut,
+            a.is_late AS isLate,
+            a.is_early_leave AS isEarlyLeave,
+            EXTRACT(EPOCH FROM (a.break_end - a.break_start)) / 60 AS breakTimeMinutes,
+            a.break_start AS breakStart,
+            a.break_end AS breakEnd,
             mu.name AS modifiedBy,
             a.modified_at AS modifiedAt
         FROM attendance a
                  LEFT JOIN users u ON a.user_id = u.id
                  LEFT JOIN users mu ON a.modified_by = mu.id
-        WHERE u.id = #{id}
-    </select>
-
-    <select id="findUserById" parameterType="int" resultType="Attendance">
-        SELECT *
-        FROM attendance
-        WHERE user_id = #{id}
+        WHERE id = #{id}
     </select>
     <select id="findByWorkDate" resultType="Attendance">
         SELECT *
         FROM attendance
         WHERE work_date = #{workDate} AND user_id = #{userId}
     </select>
+    <select id="findById" parameterType="int" resultType="Attendance">
+        SELECT *
+        FROM attendance
+        WHERE id = #{id}
+    </select>
     <insert id="insert">
-        INSERT INTO attendance (user_id, work_date, clock_in, clock_out, modified_by, modified_at)
-        VALUES (#{userId}, #{workDate}, #{clockIn}, #{clockOut}, #{modifiedBy}, #{modifiedAt})
+        INSERT INTO attendance (user_id, work_date, clock_in, clock_out, is_late, modified_by, modified_at)
+        VALUES (#{userId}, #{workDate}, #{clockIn}, #{clockOut}, #{isLate}, #{modifiedBy}, #{modifiedAt})
     </insert>
 
     <update id="update">
         UPDATE attendance
         SET clock_in = #{clockIn},
             clock_out = #{clockOut},
+            work_date = #{workDate},
             modified_by = #{modifiedBy},
-            modified_at = #{modifiedAt}
-        WHERE user_id = #{userId}
-          AND work_date = #{workDate}
+            modified_at = #{modifiedAt},
+            is_early_leave = #{isEarlyLeave},
+            is_late = #{isLate},
+            break_start = #{breakStart},
+            break_end = #{breakEnd}
+        WHERE id = #{id}
+    </update>
+
+    <update id="breakTimeUpdate">
+        UPDATE attendance
+        SET break_start = #{breakStart},
+            break_end = #{breakEnd}
+        WHERE user_id = #{userId} AND work_date = #{workDate}
     </update>
 
     <delete id="delete" parameterType="int">

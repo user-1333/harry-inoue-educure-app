@@ -1,10 +1,12 @@
 package jp.educure.attendancemanagement.controller;
 
+import jp.educure.attendancemanagement.auth.LoginUser;
+import jp.educure.attendancemanagement.dto.ApiResponse;
 import jp.educure.attendancemanagement.service.AuthService;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.Builder;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
@@ -22,7 +24,12 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public void signup(@RequestBody AuthService.SignupRequest request) {
-        authService.signup(request);
+    public AuthService.LoginResponse signup(@RequestBody AuthService.SignupRequest request) {
+        return authService.signup(request);
+    }
+    @PreAuthorize("hasRole(T(jp.educure.attendancemanagement.domain.role.RoleType).ADMIN)")
+    @PutMapping("/change/role")
+    public ApiResponse changeRole(@RequestBody AuthService.RoleRequest request) {
+        return authService.changeRole(request);
     }
 }

@@ -16,6 +16,10 @@ public class Attendance {
     private LocalDate workDate;
     private LocalDateTime clockIn;
     private LocalDateTime clockOut;
+    private  Boolean isEarlyLeave;
+    private  Boolean isLate;
+    private  LocalDateTime breakStart;
+    private  LocalDateTime breakEnd;
     private Integer modifiedBy;
     private LocalDateTime modifiedAt;
     private LocalDateTime createdAt;

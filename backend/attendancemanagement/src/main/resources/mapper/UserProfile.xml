@@ -30,7 +30,8 @@
             u.name AS userName,
             u.email AS email,
             r.name AS roleName,
-            d.name AS departmentName
+            d.name AS departmentName,
+            u.created_at AS userCreatedAt
         FROM user_profiles up
                  left join roles r ON r.id = up.role_id
                  left join users u ON u.id = up.user_id

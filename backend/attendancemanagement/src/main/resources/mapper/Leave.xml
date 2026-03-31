@@ -17,12 +17,14 @@
                 aps.status AS approvalStatus,
                 l.start_date AS startDate,
                 l.end_date AS endDate,
+                l.reason AS reason,
                 l.approved_at AS approvedAt,
-                u.name AS approvedBy
+                au.name AS approvedBy
         FROM leave l
         LEFT JOIN users u ON l.user_id = u.id
         LEFT JOIN leave_type lt ON l.leavetype_id = lt.id
         LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
+        LEFT JOIN users au ON l.approved_by = au.id
         WHERE u.id = #{id}
     </select>
     <select id="finddetailLeaveMonth" parameterType="int" resultType="jp.educure.attendancemanagement.dto.detailLeave">
@@ -33,11 +35,12 @@
                 l.start_date AS startDate,
                 l.end_date AS endDate,
                 l.approved_at AS approvedAt,
-                u.name AS approvedBy
+                au.name AS approvedBy
         FROM leave l
                  LEFT JOIN users u ON l.user_id = u.id
                  LEFT JOIN leave_type lt ON l.leavetype_id = lt.id
                  LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
+                 LEFT JOIN users au ON l.approved_by = au.id
         WHERE l.created_at >= now() - make_interval(months => #{month});
     </select>
     <select id="finddetailLeaveApproval" parameterType="int" resultType="jp.educure.attendancemanagement.dto.detailLeave">
@@ -48,11 +51,12 @@
                 l.start_date AS startDate,
                 l.end_date AS endDate,
                 l.approved_at AS approvedAt,
-                u.name AS approvedBy
+                au.name AS approvedBy
         FROM leave l
                  LEFT JOIN users u ON l.user_id = u.id
                  LEFT JOIN leave_type lt ON l.leavetype_id = lt.id
                  LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
+                 LEFT JOIN users au ON l.approved_by = au.id
         WHERE l.approval_status_id = #{approvalStatusId};
     </select>
     <select id="finddetailLeaveAll" resultType="jp.educure.attendancemanagement.dto.detailLeave">
@@ -63,11 +67,12 @@
                 l.start_date AS startDate,
                 l.end_date AS endDate,
                 l.approved_at AS approvedAt,
-                u.name AS approvedBy
+                au.name AS approvedBy
         FROM leave l
                  LEFT JOIN users u ON l.user_id = u.id
                  LEFT JOIN leave_type lt ON l.leavetype_id = lt.id
-                 LEFT JOIN approval_status aps ON l.approval_status_id = aps.id;
+                 LEFT JOIN approval_status aps ON l.approval_status_id = aps.id
+                 LEFT JOIN users au ON l.approved_by = au.id;
     </select>
     <insert id="insert">
         INSERT INTO leave

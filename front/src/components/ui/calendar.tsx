@@ -43,7 +43,10 @@ function Calendar({
             month: "long",
           }),
         formatMonthDropdown: (date) =>
-          date.toLocaleString(locale?.code, { month: "short" }),
+          date.toLocaleDateString(locale?.code ?? "ja-JP", {
+            year: "numeric",
+            month: "long",
+          }),
         ...formatters,
       }}
       classNames={{

@@ -14,6 +14,7 @@ public class detailLeave {
     private String approvalStatus;
     private LocalDate startDate;
     private LocalDate endDate;
+    private String reason;
     private LocalDate approvedAt;
     private String approvedBy;
 }

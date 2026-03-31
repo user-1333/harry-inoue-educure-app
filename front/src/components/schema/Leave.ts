@@ -11,7 +11,7 @@ export type LeaveRequest = z.infer<typeof LeaveRequestSchema>;
 
 export const LeaveApprovalSchema = z.object({
     leaveId : z.number().int(),
-    approvalStatusId : z.union([z.literal(2), z.literal(3)])
+    approvalStatusId : z.union([z.literal(2), z.literal(3)]),
 })
 export type LeaveApproval = z.infer<typeof LeaveApprovalSchema>;
 

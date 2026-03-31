@@ -13,5 +13,9 @@ import java.time.LocalDateTime;
 public class AttendanceUpdateRequest {
     private LocalDate workDate;
     private LocalDateTime clockIn;
+    private LocalDateTime breakStart;
+    private LocalDateTime breakEnd;
     private LocalDateTime clockOut;
+    private Boolean isLate;
+    private Boolean isEarlyLeave;
 }

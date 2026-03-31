@@ -15,6 +15,11 @@ public class DetailAttendance {
     private LocalDate workDate;
     private LocalDateTime clockIn;
     private LocalDateTime clockOut;
+    private Boolean isLate;
+    private Boolean isEarlyLeave;
+    private Integer breakTimeMinutes;
+    private LocalDateTime breakStart;
+    private LocalDateTime breakEnd;
     private String modifiedBy;
     private LocalDateTime modifiedAt;
 }

@@ -29,27 +29,58 @@ public class AttendanceController {
         return attendanceService.getAttendanceByUserId(loginUser.getUserId());
     }
 
+    @PostMapping("get/id/{attendanceId}")
+    public List<DetailAttendance> getAttendanceById(@PathVariable Integer attendanceId) {
+        return attendanceService.getAttendanceById(attendanceId);
+    }
+
+    @GetMapping("get/user/work-date")
+    public List<Attendance> getAttendanceByWorkDate(@AuthenticationPrincipal LoginUser loginUser) {
+        return attendanceService.getAttendanceByWorkDate(loginUser.getUserId());
+    }
+
     @PostMapping("/clock-in")
-    public ApiResponse clockIn(@AuthenticationPrincipal LoginUser loginUser) {
-        return attendanceService.clockIn(loginUser.getUserId());
+    public ApiResponse clockIn(@AuthenticationPrincipal LoginUser loginUser,@RequestParam(defaultValue = "false") boolean isLate) {
+        return attendanceService.clockIn(loginUser.getUserId(),isLate);
+    }
+    @PostMapping("/clock-in/late")
+    public ApiResponse clockInLate(@AuthenticationPrincipal LoginUser loginUser) {
+        return attendanceService.clockIn(loginUser.getUserId(),true);
+    }
+
+    @PostMapping("/break-in")
+    public ApiResponse breakIn(@AuthenticationPrincipal LoginUser loginUser) {
+        return attendanceService.breakIn(loginUser.getUserId());
+    }
+    @PostMapping("/break-out")
+    public ApiResponse breakOut(@AuthenticationPrincipal LoginUser loginUser) {
+        return attendanceService.breakOut(loginUser.getUserId());
     }
 
     @PostMapping("/clock-out")
-    public ApiResponse clockOut(@AuthenticationPrincipal LoginUser loginUser) {
-        return attendanceService.clockOut(loginUser.getUserId());
+    public ApiResponse clockOut(@AuthenticationPrincipal LoginUser loginUser, @RequestParam(defaultValue = "false") boolean isEarlyLeave) {
+        return attendanceService.clockOut(loginUser.getUserId(),isEarlyLeave);
+    }
+    @PostMapping("/clock-out/early")
+    public ApiResponse clockOutEarly(@AuthenticationPrincipal LoginUser loginUser) {
+        return attendanceService.clockOut(loginUser.getUserId(),true);
     }
 
     @PreAuthorize("hasRole(T(jp.educure.attendancemanagement.domain.role.RoleType).MANAGER)")
-    @PutMapping("/update/{targetUserId}")
+    @PutMapping("/update/{attendanceId}")
     public ApiResponse updateAttendance(
             @AuthenticationPrincipal LoginUser loginUser,
-            @PathVariable Integer targetUserId,
+            @PathVariable Integer attendanceId,
             @RequestBody AttendanceUpdateRequest request) {
         Attendance attendance = new Attendance();
-        attendance.setUserId(targetUserId);
+        attendance.setId(attendanceId);
         attendance.setWorkDate(request.getWorkDate());
         attendance.setClockIn(request.getClockIn());
+        attendance.setBreakStart(request.getBreakStart());
+        attendance.setBreakEnd(request.getBreakEnd());
         attendance.setClockOut(request.getClockOut());
+        attendance.setIsLate(request.getIsLate());
+        attendance.setIsEarlyLeave(request.getIsEarlyLeave());
         return attendanceService.updateAttendance(loginUser.getUserId(), attendance);
     }
 }

@@ -19,6 +19,7 @@ import java.util.List;
 public class UsersController {
     private final UserProfileMapper userProfileMapper;
 
+    @PreAuthorize("hasRole(T(jp.educure.attendancemanagement.domain.role.RoleType).ADMIN)")
     @GetMapping("/all")
     public List<DetailUserProfile> getAll() {
         return userProfileMapper.findDetailUserAll();

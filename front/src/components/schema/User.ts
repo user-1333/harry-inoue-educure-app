@@ -5,5 +5,6 @@ export const UserSchema = z.object({
     email: z.string().max(100),
     departmentName: z.string().max(100).nullable(),
     roleName: z.enum(["EMPLOYEE", "MANAGER", "ADMIN"]),
+    userCreatedAt: z.date(),
 });
 export type User = z.infer<typeof UserSchema>;

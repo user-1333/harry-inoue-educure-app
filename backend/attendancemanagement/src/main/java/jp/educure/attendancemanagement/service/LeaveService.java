@@ -34,8 +34,6 @@ public class LeaveService {
 
 
     public ApiResponse request(Integer userId, RequestLeave requestLeave) {
-        System.out.println("ユーザーID: " + userId);
-        System.out.println("休暇申請内容: " + requestLeave.toString());
         if (requestLeave.getStartDate() == null || requestLeave.getEndDate() == null) {
             return new ApiResponse(1, "休暇の開始日と終了日は必須です。");
         }
@@ -59,8 +57,6 @@ public class LeaveService {
     }
 
     public ApiResponse approved(Integer userId, ApprovedLeave approvedLeave) {
-        System.out.println("休暇ID: " + approvedLeave.getLeaveId());
-        System.out.println("承認ステータスID: " + approvedLeave.getApprovalStatusId());
         if (approvedLeave.getApprovalStatusId() == null || approvedLeave.getLeaveId() == null) {
             return new ApiResponse(1, "休暇IDと承認ステータスは必須です。");
         }

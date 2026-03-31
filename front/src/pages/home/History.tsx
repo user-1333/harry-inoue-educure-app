@@ -17,12 +17,12 @@ export default function History() {
     console.log(attendances)
     return (
     <div className='flex flex-col h-screen gap-4'>
-      <h1 className="text-3xl font-bold m-8 underline">勤怠一覧</h1>
+      <h1 className="text-3xl font-bold m-8 underline">勤怠履歴</h1>
       <ScrollArea className='w-full h-[80%] border-2 mx-auto px-6' >
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
+              {/* <TableHead>ID</TableHead> */}
               {/* <TableHead>ユーザー名</TableHead> */}
               <TableHead>勤務日</TableHead>
               <TableHead>出勤時刻</TableHead>

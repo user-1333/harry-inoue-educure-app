@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react'
 import { VscAccount } from 'react-icons/vsc'
 import type { User } from '../../components/schema/User'
 import { getMenuItems } from '../../components/MenuItem'
@@ -11,30 +10,11 @@ import {
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { removeTokenCookie } from '@/lib/cookie'
+import { NavLink } from 'react-router-dom'
+
+const baseStyle = "flex items-center gap-2 py-2 pl-8 border-white/40 rounded-2xl transition-colors cursor-pointer";
 
 export default function Sidebar({ user }: { user: User | null }) {
-    const [active, setActive] = useState("");
-
-    useEffect(() => {
-        if (window.location.hash === "") {
-            window.location.hash = "#HOME";
-        }
-        const updateHash = () => {
-            setActive(window.location.hash);
-        };
-        updateHash();
-        window.addEventListener("hashchange", updateHash);
-        return () => window.removeEventListener("hashchange", updateHash);
-    }, []);
-
-    const listStyle = (selectName: string) => {
-        const baseStyle = "flex items-center gap-2 py-2 pl-8 border-white/40 rounded-2xl transition-colors cursor-pointer";
-        if (active === selectName) {
-            return `${baseStyle} bg-white/40`;
-        } else {
-            return `${baseStyle} hover:bg-white/20`;
-        }
-    };
     const menuItems = getMenuItems({ user });
     return (
         <aside className="md:w-56 w-24 border-white/40 border-r-2 h-screen py-4 px-2">
@@ -61,10 +41,16 @@ export default function Sidebar({ user }: { user: User | null }) {
                 {/* Menu Items */}
                 <nav className='flex flex-col gap-2'>
                     {menuItems.map((item) => (
-                        <a key={item.href} href={item.href} className={listStyle(item.href)}>
+                        <NavLink
+                            key={item.href}
+                            to={item.href}
+                            className={({ isActive }) =>
+                                isActive ? `${baseStyle} bg-white/40` : `${baseStyle} hover:bg-white/20`
+                            }
+                        >
                             <div className="md:text-2xl text-xl">{item.icon}</div>
                             <p className="md:block hidden">{item.label}</p>
-                        </a>
+                        </NavLink>
                     ))}
                 </nav>
             </div>

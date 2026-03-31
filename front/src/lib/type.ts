@@ -1,9 +1,9 @@
 import { id } from "date-fns/locale";
 
 export const RoleMap = {
-  EMPLOYEE : 1,
-  MANAGER  : 2,
-  ADMIN    : 3,
+    EMPLOYEE : 1,
+    MANAGER  : 2,
+    ADMIN    : 3,
 } as const;
 export type RoleName  = keyof typeof RoleMap;
 export type RoleValue = (typeof RoleMap)[RoleName];

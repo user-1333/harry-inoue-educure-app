@@ -6,6 +6,7 @@ import jp.educure.attendancemanagement.entity.UserProfile;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
@@ -16,4 +17,5 @@ public class DetailUserProfile {
     private String  email;
     private String  roleName;
     private String  departmentName;
+    private LocalDateTime userCreatedAt;
 }

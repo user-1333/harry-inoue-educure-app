@@ -7,6 +7,7 @@ import jp.educure.attendancemanagement.dto.RequestLeave;
 import jp.educure.attendancemanagement.dto.detailLeave;
 import jp.educure.attendancemanagement.service.LeaveService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,7 +24,6 @@ public class LeaveController {
     public List<detailLeave> getPending(
 //            @AuthenticationPrincipal LoginUser loginUser
     ) {
-        System.out.println("休暇申請の取得"+leaveService.getLeaveApproval(1));
         return leaveService.getLeaveApproval(1);
     }
     @GetMapping("get/approve")
@@ -40,6 +40,7 @@ public class LeaveController {
     ) {
         return leaveService.request(loginUser.getUserId(), requestLeave);
     }
+    @PreAuthorize("hasRole(T(jp.educure.attendancemanagement.domain.role.RoleType).MANAGER)")
     @PutMapping("/approval/{targetId}")
     public ApiResponse approveLeave(
             @AuthenticationPrincipal LoginUser loginUser,
@@ -47,6 +48,7 @@ public class LeaveController {
             @RequestBody ApprovedLeave approvedLeave
     ) {
         approvedLeave.setLeaveId(targetId);
+        approvedLeave.setApprovedBy(loginUser.getUserId());
         return leaveService.approved(loginUser.getUserId(),approvedLeave);
     }
 }

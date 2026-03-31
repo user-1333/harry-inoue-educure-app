@@ -1,7 +1,10 @@
 package jp.educure.attendancemanagement.service;
 
+import jp.educure.attendancemanagement.domain.role.RoleType;
+import jp.educure.attendancemanagement.dto.ApiResponse;
 import jp.educure.attendancemanagement.entity.User;
 import jp.educure.attendancemanagement.mapper.UserMapper;
+import jp.educure.attendancemanagement.mapper.UserProfileMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +20,7 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final UserProfileMapper userProfileMapper;
 
     public record LoginRequest(
             String email,
@@ -30,16 +34,21 @@ public class AuthService {
             String email,
             String password
     ) {}
+    public record RoleRequest(
+            Integer userId,
+            Integer roleId
+    ) {}
 
     public AuthService(UserMapper userMapper,
                        PasswordEncoder passwordEncoder,
                        JwtService jwtService,
-                       AuthenticationManager authenticationManager)
+                       AuthenticationManager authenticationManager, UserProfileMapper userProfileMapper)
     {
         this.userMapper = userMapper;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
         this.authenticationManager = authenticationManager;
+        this.userProfileMapper = userProfileMapper;
     }
 
     public LoginResponse login(LoginRequest request) {
@@ -66,10 +75,31 @@ public class AuthService {
         return new LoginResponse(token);
     }
 
-    public void signup(SignupRequest request) {
+    public LoginResponse signup(SignupRequest request) {
+
+        // 既存ユーザーのチェック
+        User existingUser = userMapper.findByEmail(request.email());
+        if (existingUser != null) {
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "このメールアドレスは既に登録されています");
+        }
 
         // 保存前に平文パスワードを必ずハッシュ化する。
         String hashedPassword = passwordEncoder.encode(request.password());
         userMapper.insert(request.name(), request.email(),hashedPassword);
+        
+        User newUser = userMapper.findByEmail(request.email());
+        if (newUser == null) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "ユーザー登録に失敗しました");
+        }
+        Integer EMPLOYEE = 1;
+        userProfileMapper.insert(newUser.getId(), EMPLOYEE , null);
+        
+        // ログイン処理を実行して token を返す
+        return login(new LoginRequest(request.email(), request.password()));
+    }
+    //
+    public ApiResponse changeRole(RoleRequest request) {
+        userProfileMapper.update(request.userId,request.roleId,null);
+        return new ApiResponse(0, "ユーザーのロールが変更されました。");
     }
 }

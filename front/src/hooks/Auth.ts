@@ -3,36 +3,36 @@ import { request } from "@/lib/ApiFetch";
 import { setTokenToCookie } from "@/lib/cookie";
 import { toast } from "sonner"
 
-export function login(postData:{email:string,password:string}) {
-    request<{ token: string }>("auth/login", {
+export async function login(postData:{email:string,password:string}) {
+    const res = await request<{ token: string }>("auth/login", {
         method: "POST",
         data: postData
-    }).then((res) => {
-        setTokenToCookie(res.token);
-        window.location.href = "/";
     }).catch((err) => {
         console.error(err);
         toast.error(err.message || "Login failed", {
             position: "top-center",
         });
-        document.getElementById('btn')?.removeAttribute('disabled');
+        throw err;
     });
+
+    setTokenToCookie(res.token);
+    return res;
 }
 
-export function signup(postData:{name:string,email:string,password:string}) {
-    request<{ token: string }>("auth/signup", {
+export async function signup(postData:{name:string,email:string,password:string}) {
+    const res = await request<{ token: string }>("auth/signup", {
         method: "POST",
         data: postData
-    }).then((res) => {
-        setTokenToCookie(res.token);
-        window.location.href = "/";
     }).catch((err) => {
         console.error(err);
         toast.error(err.message || "Signup failed", {
             position: "top-center",
         });
-        document.getElementById('btn')?.removeAttribute('disabled');
+        throw err;
     });
+
+    setTokenToCookie(res.token);
+    return res;
 }
 
 export function ChangeRole(postData:{userId:number,roleId:number}) {

@@ -11,18 +11,20 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { signup } from '@/hooks/Auth';
 
 export default function Signup() {
     type FormOnSubmit = NonNullable<ComponentProps<'form'>['onSubmit']>
+    const navigate = useNavigate();
     const [formData, setFormData] = useState({
         name: '',
         email: '',
         password: '',
     });
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const isFormValid = formData.name && formData.email && formData.password;
+    const isFormValid = formData.name.trim() !== '' && formData.email.trim() !== '' && formData.password !== '';
 
     const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -34,12 +36,20 @@ export default function Signup() {
         }));
     };
 
-    const SignupSubmit: FormOnSubmit = (event) => {
+    const SignupSubmit: FormOnSubmit = async (event) => {
         event.preventDefault();
-        if (!isFormValid) {
+        if (!isFormValid || isSubmitting) {
             return;
         }
-        signup(formData);
+
+        setIsSubmitting(true);
+
+        try {
+            await signup(formData);
+            navigate('/');
+        } finally {
+            setIsSubmitting(false);
+        }
     };
 
     return (
@@ -92,8 +102,8 @@ export default function Signup() {
                                     required
                                 />
                             </div>
-                            <Button type="submit" className="w-full" disabled={!isFormValid}>
-                                Sign Up
+                            <Button type="submit" className="w-full" disabled={!isFormValid || isSubmitting}>
+                                {isSubmitting ? 'Signing Up...' : 'Sign Up'}
                             </Button>
                         </div>
                     </form>

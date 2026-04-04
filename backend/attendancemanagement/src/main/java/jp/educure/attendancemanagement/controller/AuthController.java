@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.controller;
 
+import jakarta.validation.Valid;
 import jp.educure.attendancemanagement.auth.LoginUser;
 import jp.educure.attendancemanagement.dto.ApiResponse;
 import jp.educure.attendancemanagement.service.AuthService;
@@ -19,17 +20,17 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public AuthService.LoginResponse login(@RequestBody AuthService.LoginRequest request) {
+    public AuthService.LoginResponse login(@Valid @RequestBody AuthService.LoginRequest request) {
         return authService.login(request);
     }
 
     @PostMapping("/signup")
-    public AuthService.LoginResponse signup(@RequestBody AuthService.SignupRequest request) {
+    public AuthService.LoginResponse signup(@Valid @RequestBody AuthService.SignupRequest request) {
         return authService.signup(request);
     }
     @PreAuthorize("hasRole(T(jp.educure.attendancemanagement.domain.role.RoleType).ADMIN)")
     @PutMapping("/change/role")
-    public ApiResponse changeRole(@RequestBody AuthService.RoleRequest request) {
+    public ApiResponse changeRole(@Valid @RequestBody AuthService.RoleRequest request) {
         return authService.changeRole(request);
     }
 }

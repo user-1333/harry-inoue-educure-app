@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.service;
 
+import jakarta.validation.constraints.*;
 import jp.educure.attendancemanagement.domain.role.RoleType;
 import jp.educure.attendancemanagement.dto.ApiResponse;
 import jp.educure.attendancemanagement.entity.User;
@@ -23,19 +24,32 @@ public class AuthService {
     private final UserProfileMapper userProfileMapper;
 
     public record LoginRequest(
+            @NotBlank(message = "メールアドレスは必須です")
+            @Email(message = "有効なメールアドレスを入力してください")
             String email,
+            @NotBlank(message = "パスワードは必須です")
             String password
     ) {}
     public record LoginResponse(
             String token
     ) {}
     public record SignupRequest(
+            @NotBlank(message = "名前は必須です")
+            @Size(min = 1, max = 100, message = "名前は1～100文字で入力してください")
             String name,
+            @NotBlank(message = "メールアドレスは必須です")
+            @Email(message = "有効なメールアドレスを入力してください")
             String email,
+            @NotBlank(message = "パスワードは必須です")
+            @Size(min = 5, message = "パスワードは5字以上である必要があります")
             String password
     ) {}
     public record RoleRequest(
+            @NotNull(message = "ユーザーIDは必須です")
+            @Positive(message = "ユーザーIDは正の整数である必要があります")
             Integer userId,
+            @NotNull(message = "ロールIDは必須です")
+            @Positive(message = "ロールIDは正の整数である必要があります")
             Integer roleId
     ) {}
 

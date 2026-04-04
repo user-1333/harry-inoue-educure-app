@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.controller;
 
+import jakarta.validation.Valid;
 import jp.educure.attendancemanagement.auth.LoginUser;
 import jp.educure.attendancemanagement.dto.ApiResponse;
 import jp.educure.attendancemanagement.dto.ApprovedLeave;
@@ -36,7 +37,7 @@ public class LeaveController {
     @PostMapping("/request")
     public ApiResponse requestLeave(
             @AuthenticationPrincipal LoginUser loginUser,
-            @RequestBody RequestLeave requestLeave
+            @Valid @RequestBody RequestLeave requestLeave
     ) {
         return leaveService.request(loginUser.getUserId(), requestLeave);
     }
@@ -45,7 +46,7 @@ public class LeaveController {
     public ApiResponse approveLeave(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable Integer targetId,
-            @RequestBody ApprovedLeave approvedLeave
+            @Valid @RequestBody ApprovedLeave approvedLeave
     ) {
         approvedLeave.setLeaveId(targetId);
         approvedLeave.setApprovedBy(loginUser.getUserId());

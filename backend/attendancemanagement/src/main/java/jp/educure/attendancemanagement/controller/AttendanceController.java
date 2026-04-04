@@ -1,5 +1,6 @@
 package jp.educure.attendancemanagement.controller;
 
+import jakarta.validation.Valid;
 import jp.educure.attendancemanagement.auth.LoginUser;
 import jp.educure.attendancemanagement.dto.ApiResponse;
 import jp.educure.attendancemanagement.dto.AttendanceUpdateRequest;
@@ -67,7 +68,7 @@ public class AttendanceController {
     public ApiResponse updateAttendance(
             @AuthenticationPrincipal LoginUser loginUser,
             @PathVariable Integer attendanceId,
-            @RequestBody AttendanceUpdateRequest request) {
+            @Valid @RequestBody AttendanceUpdateRequest request) {
         Attendance attendance = new Attendance();
         attendance.setId(attendanceId);
         attendance.setWorkDate(request.getWorkDate());
